@@ -1,0 +1,27 @@
+
+/* Fonts */
+:root {
+  --default-font: Garamond, monospace;
+}
+
+/* Colors */
+:root {
+  --navbar-background-color: #31363F;
+  --navbar-text-color: white;
+  --background-color: #E9F0F3;
+  --accent-color: #EA857A;
+  --contrast-color: #31363F;
+  --default-color: black;
+  --grid-color: #f8f5ec;
+  --visited-color: #C3CFD7;
+  --path-color: #EA857A;
+}
+
+.App {
+  text-align: center;
+  font-family: var(--default-font);
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+

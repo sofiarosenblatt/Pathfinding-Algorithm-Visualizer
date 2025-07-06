@@ -18,7 +18,10 @@
     border-radius: 10px;
     padding: 20px 30px;
     width: 90%;
-    max-width: 500px;
+    max-width: 40vw;
+    min-width: 500px;
+    max-height: 90vh;
+    height: 100%;
     text-align: center;
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -127,6 +130,15 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
+    position: absolute;
+    bottom: 2%;
+}
+
+.navigation-buttons button.left_btn {
+    left: 5%;
+}
+.navigation-buttons button.right_btn {
+    right: 5%;
 }
 
 /* Fade-in animation */

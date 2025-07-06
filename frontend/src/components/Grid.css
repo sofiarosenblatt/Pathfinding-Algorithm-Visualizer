@@ -83,7 +83,7 @@
     background-blend-mode: darken;
 }
 
-.grid-node.path {
+.grid-node.visited.path {
     background-color: var(--path-color) !important; /* Path color behind */
     background-blend-mode: darken;
 }

@@ -1,7 +1,7 @@
 
 .header-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     background-color: var(--navbar-background-color);
     color: var(--navbar-text-color);
@@ -9,6 +9,8 @@
     border-bottom: 3px solid var(--accent-color);
     min-height: fit-content;
     z-index: 1;
+    padding: 0;
+    margin: 0;
 }
 
 .header-title {
@@ -18,20 +20,32 @@
 
 .header-button {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    width: auto;
+    height: auto;
+    min-height: 30px;
+    max-height: 40px;
+    font-size: 0px; /* Hide text */
     justify-content: center;
-    justify-self: flex-start;
-    padding: .375rem .75rem;
-    font-size: clamp(0.6rem, 1.8vw, 1rem);
-    line-height: 1.2;
-    background-color: var(--navbar-background-color);
-    color: var(--navbar-text-color);
-    border: 3px solid var(--accent-color);
-    border-radius: 12px; 
-    flex-grow: 0.1;
-    height: 50px;
-    min-width: 100px;
-    transition: all 0.3s ease-in-out;
+    border-radius: 8px; 
+    background-color: transparent;
+    border: 0px;
+}
+
+.header-button:hover {
+    transform: scale(1.1);
+}
+
+.header-button img {
+    margin: 0;
+    height: 4.0vh;
+    max-width: 13vw;
+    max-height: 40px;
+    border: 0px hidden;
+    border-radius: 8px; 
+    padding: 5px;
+    background-color: transparent;
+    filter: invert(1);
 }
 
 .header-button-text {
@@ -40,11 +54,15 @@
 
 @media (max-width: 768px) {
     .header-container {
-        height: 8vmin;
+        height: 8vh;
+        background-color: var(--navbar-background-color);
+    }
+    .header-button img {
+        padding: 0.5vh;
     }
     .header-title {
         font-size: 1.5rem;
-        padding: 5px;
+        padding: 0.8vh;
     }
     .header-spacer {
         display: none;

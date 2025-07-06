@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 
 /* Fonts */
 :root {
@@ -17,11 +21,17 @@
   --path-color: #EA857A;
 }
 
+html {
+  margin: 0;
+  padding: 0;
+}
+
 .App {
   text-align: center;
   font-family: var(--default-font);
   overflow: visible;
   position: relative;
   z-index: 1;
+  background-color: var(--navbar-background-color);
 }
 

@@ -4,7 +4,7 @@ from search_algorithms import a_star, dijkstra
 from grid import Grid
 
 app = Flask(__name__)
-CORS(app)  # Allows React to communicate with Flask
+CORS(app, origins=["https://PAV-frontend.onrender.com", "http://localhost:5173"])
 
 @app.route('/astar', methods=['POST'])
 def run_astar():
@@ -100,4 +100,4 @@ def run_dijkstra():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

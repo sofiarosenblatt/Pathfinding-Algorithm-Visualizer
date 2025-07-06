@@ -1,6 +1,6 @@
 Flask==3.1.0
 Flask-Cors==5.0.0
-gunicorn==21.2.0  # Required for deployment
+gunicorn==21.2.0
 numpy==1.26.0
 pandas==2.2.2
 scipy==1.12.0

@@ -1,0 +1,23 @@
+# render.yaml
+# --------------
+services:
+  - type: web
+    name: PAV-backend
+    env: python
+    plan: free
+    region: virginia
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: |
+      gunicorn app:app
+
+  # 2) Vite React static site
+  - type: static
+    name: PAV-frontend
+    plan: free
+    region: virginia
+    buildCommand: |
+      cd frontend
+      npm install
+      npm run build
+    publishPath: frontend/dist

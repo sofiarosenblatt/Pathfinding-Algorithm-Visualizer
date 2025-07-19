@@ -4,10 +4,36 @@ from search_algorithms import a_star, dijkstra
 from grid import Grid
 
 app = Flask(__name__)
-CORS(app, origins=["https://PAV-frontend.onrender.com", "http://localhost:5173"])
+if app.debug:
+    CORS(app, origins=["http://localhost:5173"])
+else:
+    CORS(app, origins=["https://PAV-frontend.onrender.com"])
 
 @app.route('/astar', methods=['POST'])
 def run_astar():
+    """
+    Run the A* pathfinding algorithm on a grid based on user-provided parameters.
+
+    Expects a JSON payload with the following fields:
+        - num_rows (int): Number of rows in the grid.
+        - num_cols (int): Number of columns in the grid.
+        - source (list or tuple): Coordinates [x, y] of the source node.
+        - target (list or tuple): Coordinates [x, y] of the target node.
+        - walls (list): List of coordinates representing wall nodes.
+        - weights (list): List of coordinates representing weighted nodes.
+        - weightCost (float): The cost to traverse a weighted node.
+        - allowDiagonal (bool): Whether diagonal movement is allowed.
+
+    Returns:
+        JSON response containing:
+            - visited (list): List of coordinates visited by the algorithm.
+            - path (list): List of coordinates representing the shortest path.
+            - path_length (float): The length of the shortest path.
+            - path_cost (float): The total cost of the shortest path.
+            - node_costs (list): List of f-costs for each visited node.
+
+    Returns HTTP 400 if required parameters are missing, or HTTP 500 on error.
+    """
     try:
         # Parse JSON request
         data = request.json
@@ -49,11 +75,33 @@ def run_astar():
         return jsonify({'visited': visited_coordinates, 'path': path_coordinates, 'path_length': path_length, 'path_cost': path_cost, 'node_costs': node_costs})
 
     except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/dijkstra', methods=['POST'])
 def run_dijkstra():
+    """
+    Run Dijkstra's pathfinding algorithm on a grid based on user-provided parameters.
+
+    Expects a JSON payload with the following fields:
+        - num_rows (int): Number of rows in the grid.
+        - num_cols (int): Number of columns in the grid.
+        - source (list or tuple): Coordinates [x, y] of the source node.
+        - target (list or tuple): Coordinates [x, y] of the target node.
+        - walls (list): List of coordinates representing wall nodes.
+        - weights (list): List of coordinates representing weighted nodes.
+        - weightCost (float): The cost to traverse a weighted node.
+        - allowDiagonal (bool, optional): Whether diagonal movement is allowed (default: False).
+
+    Returns:
+        JSON response containing:
+            - visited (list): List of coordinates visited by the algorithm.
+            - path (list): List of coordinates representing the shortest path.
+            - path_cost (float): The total cost of the shortest path.
+            - path_length (float): The length of the shortest path.
+            - node_costs (list): List of costs for each visited node.
+
+    Returns HTTP 400 if required parameters are missing, or HTTP 500 on error.
+    """
     try:
         # Parse JSON request
         data = request.json
@@ -84,7 +132,7 @@ def run_dijkstra():
         for weight in weights:
             grid[weight].add_weight()
 
-        # Run Dijkstra algorithm
+        # Run Dijkstra's algorithm
         visited, path, path_cost, path_length = dijkstra(grid, source_node, target_node, moves_diagonally=allow_diagonal)
 
         # Convert visited/path to list of tuples
@@ -95,9 +143,5 @@ def run_dijkstra():
         return jsonify({'visited': visited_coordinates, 'path': path_coordinates, 'path_cost': float(path_cost), 'path_length': float(path_length), 'node_costs': node_costs})
 
     except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Internal server error'}), 500
 
-
-if __name__ == '__main__':
-    app.run(debug=False)

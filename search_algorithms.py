@@ -4,13 +4,24 @@ import math
 
 def a_star(grid, source, target, moves_diagonally=False):
     """
+    Perform the A* pathfinding algorithm to find the shortest path from source to target on a grid.
+
     Args:
         grid (Grid): The grid to search through.
-        source (Node): The source node.
-        target (Node): The target node.
+        source (Node): The starting node.
+        target (Node): The goal node.
+        moves_diagonally (bool, optional): Whether diagonal movement is allowed. Defaults to False.
 
     Returns:
-        The shortest path as a list from the source to the target node (including both).
+        tuple: A tuple containing:
+            - visited_ordered (list): List of nodes visited in the order they were explored.
+            - path (list): List of nodes representing the shortest path from source to target (inclusive).
+            - path_length (float): The total length of the shortest path.
+            - path_cost (float): The total cost of the shortest path.
+
+    Notes:
+        - If the source and target are the same node, returns an empty list.
+        - If no path is found, returns (visited_ordered, [], 0, 0).
     """
     path_length = 0
     path_cost = 0
@@ -76,13 +87,24 @@ def a_star(grid, source, target, moves_diagonally=False):
 
 def dijkstra(grid, source, target, moves_diagonally=False): 
     """
+    Perform Dijkstra's algorithm to find the shortest path from source to target on a grid.
+
     Args:
         grid (Grid): The grid to search through.
-        source (Node): The source node.
-        target (Node): The target node.
+        source (Node): The starting node.
+        target (Node): The goal node.
+        moves_diagonally (bool, optional): Whether diagonal movement is allowed. Defaults to False.
 
     Returns:
-        The shortest path as a list from the source to the target node (including both).
+        tuple: A tuple containing:
+            - visited_ordered (list): List of nodes visited in the order they were explored.
+            - path (list): List of nodes representing the shortest path from source to target (inclusive).
+            - path_cost (float): The total cost of the shortest path.
+            - path_length (float): The total length of the shortest path.
+
+    Notes:
+        - If the source and target are the same node, returns an empty list.
+        - If no path is found, returns (visited_ordered, [], 0, 0).
     """
     path_cost = 0
     path_length = 0
@@ -144,7 +166,13 @@ def dijkstra(grid, source, target, moves_diagonally=False):
 
 def euclidean_dist_heuristic(node1, node2):
     """
+    Calculate the Euclidean distance between two nodes.
+
+    Args:
+        node1 (Node): The first node.
+        node2 (Node): The second node.
+
     Returns:
-        Euclidean distance between node1 and node2
+        float: The Euclidean distance between node1 and node2.
     """
     return math.sqrt(math.pow(node2.x - node1.x, 2) + math.pow(node2.y - node1.y, 2))

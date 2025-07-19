@@ -7,7 +7,9 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 
 function App() {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
+  const API_BASE_URL = import.meta.env.DEV
+  ? "http://127.0.0.1:5000"
+  : import.meta.env.VITE_API_URL;
 
   const [selectedTool, setSelectedTool] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(50);
@@ -27,7 +29,12 @@ function App() {
 
   const [tutorialPopup, setTutorialPopup] = useState(true);
 
-  /** Handles tool selection from Navbar */
+  /**
+   * Handles tool selection from the Navbar.
+   * Updates the selected tool and resets or updates UI elements based on the tool.
+   *
+   * @param {string} tool - The tool selected by the user ("restart", "edit", etc.).
+   */
   const handleToolSelect = (tool) => {
       setSelectedTool(tool);
       if (tool === "restart") {
@@ -61,24 +68,47 @@ function App() {
       }
   };
 
-  /** Handles animation speed adjustment */
+  /**
+   * Handles animation speed adjustment from the Navbar.
+   *
+   * @param {number} speed - The new animation speed in ms per step.
+   */
   const handleSpeedChange = (speed) => {
       setAnimationSpeed(speed);
   };
 
-  /** Handles changes to weight cost */
+  /**
+   * Handles changes to the weight cost from the Navbar.
+   *
+   * @param {number} cost - The new cost for weighted nodes.
+   */
   const handleWeightCostChange = (cost) => {
       setWeightCost(cost);
   }
 
+  /**
+   * Handles toggling of diagonal movement option.
+   *
+   * @param {boolean} isDiagonal - Whether diagonal movement is allowed.
+   */
   const handleToggleDiagonal = (isDiagonal) => {
       setAllowDiagonal(isDiagonal);
   };
 
+  /**
+   * Handles algorithm selection from the Navbar.
+   *
+   * @param {string} selection - The selected algorithm ("A*", "Dijkstra's").
+   */
   const handleAlgorithmSelection = (selection) => {
       setAlgorithm(selection);
   }
 
+  /**
+   * Handles toggling the display of node costs on the grid.
+   *
+   * @param {boolean} checked - Whether to display node costs.
+   */  
   const handleDisplayNodeCosts = (checked) => {
       if (checked && visited) {
           visited.forEach((node, index) => {
@@ -94,19 +124,41 @@ function App() {
       }
   }
 
+  /**
+   * Handles the case where required variables are missing.
+   * Resets the selected tool.
+   */
   const handleMissingVars = () => {
       setSelectedTool(null);
   }
 
+  /**
+   * Shows the tutorial popup.
+   */
   const showTutorial = () => {
         setTutorialPopup(true);
   }
 
+  /**
+   * Hides the tutorial popup.
+   */
   const hideTutorial = () => {
         setTutorialPopup(false);
   }
 
-  /** Triggers the selected search algorithm */
+  /**
+   * Triggers the selected search algorithm (A* or Dijkstra) by sending a POST request to the backend.
+   * Updates state with the results and animates the path on the grid.
+   *
+   * @param {number} num_rows - Number of rows in the grid.
+   * @param {number} num_cols - Number of columns in the grid.
+   * @param {Array} source - [x, y] coordinates of the source node.
+   * @param {Array} target - [x, y] coordinates of the target node.
+   * @param {Array} walls - Array of [x, y] coordinates for wall nodes.
+   * @param {Array} weights - Array of [x, y] coordinates for weighted nodes.
+   * @param {function} animatePath - Callback to animate the path and visited nodes.
+   * @param {boolean} isRunning - Whether the algorithm should run.
+   */
   const runAlgorithm = (num_rows, num_cols, source, target, walls, weights, animatePath, isRunning) => {
       if (isRunning) {
           preItems.forEach( item => { item.style.display = "none";})

@@ -1,6 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import "./Grid.css";
 
+/**
+ * Grid component for rendering and interacting with the pathfinding grid.
+ * Handles user interactions, grid state, node editing, and animation of algorithm results.
+ *
+ * Props:
+ *   - selectedTool (string): The currently selected tool (e.g., "source", "target", "wall", "weight", "run", etc.).
+ *   - animationSpeed (number): Animation speed in ms per step.
+ *   - onRun (function): Callback to trigger the backend algorithm run.
+ *   - onMissingVars (function): Callback when required variables are missing.
+ *   - onToolUpdate (function): Callback to update the selected tool.
+ */
 const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate }) => {
     const [numRows, setNumRows] = useState(30);
     const [numCols, setNumCols] = useState(30);
@@ -20,7 +31,10 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
     const animationTimeouts = useRef([]);
     const animationSpeedRef = useRef(animationSpeed);
 
-    /** Calculate grid size dynamically based on window size */
+    /**
+     * Dynamically calculates the grid size based on the window size.
+     * Ensures a minimum grid size and resets source/target if out of bounds.
+     */
     const calculateGridSize = useCallback(() => {
         const cellSize = 25; // Size of each cell in pixels
         const maxWidth = window.innerWidth * 0.9; // % of screen width
@@ -62,14 +76,19 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         }
     }, []);
 
-    /** Update grid on window resize */
+    /**
+     * Updates the grid size when the window is resized.
+     */
     useEffect(() => {
         calculateGridSize();
         window.addEventListener("resize", calculateGridSize);
         return () => window.removeEventListener("resize", calculateGridSize);
     }, [calculateGridSize]);
 
-    /** Create a new grid when computed size changes */
+    /**
+     * Creates a new grid when the computed size changes.
+     * Removes nodes that are now out of bounds.
+     */
     useEffect(() => {
         const newGrid = Array.from({ length: numRows }, (_, row) =>
             Array.from({ length: numCols }, (_, col) => (
@@ -85,7 +104,14 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         setNodesInUse(nodesInUse);
     }, [numRows, numCols, nodesInUse]);
 
-    /** Edit a single node upon selection */
+    /**
+     * Edits a single node in the grid based on user selection and tool.
+     * Handles toggling of source, target, wall, and weight nodes.
+     *
+     * @param {number} row - Row index of the node.
+     * @param {number} col - Column index of the node.
+     * @param {string} nodeType - Type of node to set ("source", "target", "wall", "weight").
+     */
     const editNode = useCallback((row, col, nodeType) => {
         const node = `${row},${col}`;
 
@@ -126,7 +152,13 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
 
     }, [sourceNode, targetNode]);
 
-    /** Update grid display upon user interaction and call editNode for the selected node */
+    /**
+     * Handles user clicks on grid nodes, updating node type and grid state.
+     * Supports placing/removing source, target, wall, weight, and erase actions.
+     *
+     * @param {number} row - Row index of the clicked node.
+     * @param {number} col - Column index of the clicked node.
+     */
     const handleNodeClick = useCallback((row, col) => {
         if (isRunning) return; // Disable actions once path is displayed
         if (!selectedTool) return;
@@ -198,12 +230,16 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         setNodesInUse(nodesInUse);
     }, [isRunning, selectedTool, sourceNode, targetNode, editNode, nodesInUse]);
 
-    /** Update animation speed dynamically */
+    /**
+     * Dynamically updates the animation speed reference when the prop changes.
+     */
     useEffect(() => {
         animationSpeedRef.current = animationSpeed;
     }, [animationSpeed]);
 
-    /** Clear animations without resetting the grid */
+    /**
+     * Clears all running animations and resets visited/path node states.
+     */
     const clearAnimations = useCallback(() => {
         animationTimeouts.current.forEach(clearTimeout);
         animationTimeouts.current = [];
@@ -221,7 +257,13 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         );
     }, []);
 
-    /** Display visited nodes and found path in the grid */
+    /**
+     * Animates the visited nodes and the shortest path on the grid.
+     * Locks grid interactions during animation.
+     *
+     * @param {Array} visited - Array of [row, col] for visited nodes.
+     * @param {Array} path - Array of [row, col] for path nodes.
+     */
     const animatePath = useCallback((visited, path) => {
         clearAnimations();
         setIsRunning(true);
@@ -276,7 +318,11 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         animationTimeouts.current.push(pathTimeout);
     }, [clearAnimations]);
 
-    /** Show a temporary warning popup */
+    /**
+     * Displays a temporary warning popup with the provided message.
+     *
+     * @param {string} message - The warning message to display.
+     */
     const showWarning = (message) => {
         setWarningMessage(message);
         setTimeout(() => {
@@ -284,7 +330,10 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         }, 3000);
     };
 
-    /** Trigger search when "Run" tool is selected */
+    /**
+     * Triggers the search algorithm when the "run" tool is selected.
+     * Validates that source and target nodes are set and not the same.
+     */
     useEffect(() => {
         if (selectedTool === "run") {
             if (!sourceNode) {
@@ -315,6 +364,9 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         }
     }, [selectedTool, sourceNode, targetNode, walls, weights, numRows, numCols, onRun, isRunning, animatePath, onMissingVars]);
 
+    /**
+     * Clears animations and resets tool when "edit" tool is selected.
+     */
     useEffect(() => {
         if (selectedTool === "edit") {
             clearAnimations();
@@ -322,7 +374,9 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         }
     })
     
-    /** Replay animation when "replay" tool is selected */
+    /**
+     * Replays the last animation when the "replay" tool is selected.
+     */
     useEffect(() => {
         if (lastVisited.length === 0 || lastPath.length === 0) return; // Nothing to replay
         
@@ -333,7 +387,9 @@ const Grid = ({ selectedTool, animationSpeed, onRun, onMissingVars, onToolUpdate
         }
     }, [selectedTool, lastVisited, lastPath, animatePath, clearAnimations, onToolUpdate]);
 
-    /** Reset grid when "restart" tool is selected */
+    /**
+     * Resets the grid and all states when the "restart" tool is selected.
+     */
     useEffect(() => {
         if (selectedTool === "restart") {
             animationTimeouts.current.forEach(clearTimeout);

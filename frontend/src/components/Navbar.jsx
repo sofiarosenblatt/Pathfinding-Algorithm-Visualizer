@@ -2,6 +2,22 @@ import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Navbar.css";
 
+/**
+ * Navbar component for selecting tools, algorithms, and settings for the pathfinding visualizer.
+ * Provides controls for grid editing, algorithm selection, animation speed, weight cost, movement mode, and result display.
+ *
+ * Props:
+ *   - onSelectTool (function): Callback when a tool is selected.
+ *   - onAlgorithmSelection (function): Callback when an algorithm is selected.
+ *   - onSpeedChange (function): Callback when animation speed is changed.
+ *   - onWeightCostChange (function): Callback when weight cost is changed.
+ *   - onToggleDiagonal (function): Callback when diagonal movement is toggled.
+ *   - toolChangeTrigger (string): External trigger to change the selected tool.
+ *   - nodesExplored (number): Number of nodes explored in the last search.
+ *   - pathCost (number): Cost of the last found path.
+ *   - pathLength (number): Length of the last found path.
+ *   - onDisplayNodeCosts (function): Callback when toggling node cost display.
+ */
 const Navbar = ({ onSelectTool, onAlgorithmSelection, onSpeedChange, onWeightCostChange, onToggleDiagonal, toolChangeTrigger, nodesExplored, pathCost, pathLength, onDisplayNodeCosts }) => {
     const [selectedTool, setSelectedTool] = useState(null);
     const [speed, setSpeed] = useState(50);
@@ -10,6 +26,12 @@ const Navbar = ({ onSelectTool, onAlgorithmSelection, onSpeedChange, onWeightCos
     const [allowDiagonal, setAllowDiagonal] = useState(true);
     const [displayNodeCosts, setDisplayNodeCosts] = useState(false);
 
+    /**
+     * Handles tool selection from the navbar.
+     * Updates the selected tool, triggers the callback, and manages button highlighting.
+     *
+     * @param {string} tool - The tool selected by the user.
+     */
     const handleToolSelect = (tool) => {
         if (selectedTool && tool === selectedTool) {
             setSelectedTool(null);
@@ -25,39 +47,66 @@ const Navbar = ({ onSelectTool, onAlgorithmSelection, onSpeedChange, onWeightCos
         }
     };
 
+    /**
+     * Syncs the selected tool with external triggers (e.g., from parent component).
+     */
     useEffect(() => {
         if (toolChangeTrigger !== selectedTool) {
             handleToolSelect(toolChangeTrigger);
         }
     });
 
+    /**
+     * Handles changes to the animation speed.
+     *
+     * @param {number} value - The increment or decrement value for speed.
+     */
     const handleSpeedChange = (value) => {
         const newSpeed = Math.max(10, Math.min(speed + value, 200));
         setSpeed(newSpeed);
         onSpeedChange(newSpeed);
     };
 
+    /**
+     * Handles changes to the weight cost for weighted nodes.
+     *
+     * @param {number} value - The increment or decrement value for weight cost.
+     */
     const handleWeightCostChange = (value) => {
         const newCost = Math.min(Math.max(0, weightCost + value), 20);
         setWeightCost(newCost);
         onWeightCostChange(newCost);
     }
 
+    /**
+     * Toggles diagonal movement mode (4-way or 8-way).
+     */
     const handleDiagonalToggle = () => {
         setAllowDiagonal(!allowDiagonal);
         onToggleDiagonal(!allowDiagonal);
     }
 
+    /**
+     * Toggles the display of node costs on the grid.
+     */
     const handleDisplayNodeCosts = () => {
         setDisplayNodeCosts(!displayNodeCosts);
         onDisplayNodeCosts(!displayNodeCosts);
     }
 
+    /**
+     * Shows or hides the algorithm dropdown menu.
+     */
     function showDropdownItems() {
         document.getElementById("algorithmDropdown").style.left = `${document.getElementById("dropdownLabel").offsetLeft}px`;
         document.getElementById("algorithmDropdown").classList.toggle("show");
     }
 
+    /**
+     * Highlights the active tool button and manages hint text visibility.
+     *
+     * @param {string} tool - The tool to highlight.
+     */
     function setButtonActive(tool) {
         const mediaWidth = window.innerWidth;
         const changingButtons = new Set(["source", "target", "wall", "weight", "erase"]);
@@ -77,7 +126,11 @@ const Navbar = ({ onSelectTool, onAlgorithmSelection, onSpeedChange, onWeightCos
         }
     }
 
-    // Close dropdown
+    /**
+     * Closes the algorithm dropdown when clicking outside of it.
+     *
+     * @param {MouseEvent} e - The click event.
+     */
     window.onclick = function(e) {
         if (!e.target.matches('.dropdown-button')) {
             var dropdown = document.getElementById("algorithmDropdown");
@@ -87,12 +140,23 @@ const Navbar = ({ onSelectTool, onAlgorithmSelection, onSpeedChange, onWeightCos
         }
     }
 
+    /**
+     * Handles algorithm selection from the dropdown.
+     *
+     * @param {string} selected - The selected algorithm ("A*" or "Dijkstra's").
+     */
     const handleAlgorithmChange = (selected) => {
         if (selected === algorithm) return;
         setAlgorithm(selected);
         onAlgorithmSelection(selected);
     }
 
+    /**
+     * Returns the label for a given tool button, depending on its selection state.
+     *
+     * @param {string} tool - The tool for which to get the label.
+     * @returns {string} - The label to display on the button.
+     */
     const getButtonLabel = (tool) => {
         if (tool === "source") {
             if (selectedTool && selectedTool === "source") return "Done";

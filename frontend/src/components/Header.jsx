@@ -21,7 +21,6 @@ const Header = ({ onSelectHelpButton }) => {
             <button className="header-button" id="help-button" onClick={() => onSelectHelpButton() }>
                 <img src={'/images/bulb.svg'} alt="Help"></img>
             </button>
-            {/* <div className="header-spacer" style={{minWidth: '100px'}}></div> */}
         </div>
     );
 }

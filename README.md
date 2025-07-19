@@ -1,10 +1,22 @@
-# Pathfinding Algorithm Visualizer
+<div style="display: flex; flex-direction: column;">
+  <h1>Pathfinding Algorithm Visualizer</h1>
+  <button type="button" 
+    style="place-self: flex-start; 
+           padding-inline: 1em;
+           padding-block: 0.5em;
+           border: 1px solid slategrey; 
+           background-color: transparent;
+           border-radius: 4px;">
+    <a style="color: white;" href="https://pav-frontend.onrender.com">View Site</a>
+  </button>
+</div>
 
 ## Overview
 
 Pathfinding Algorithm Visualizer is a full-stack web application for interactively exploring and comparing the A\* and Dijkstra pathfinding algorithms on a customizable grid. The backend is implemented in Python (Flask). The frontend, a Vite + React application, interacts with the backend via RESTful API endpoints to display algorithm progress. Users can set up grid scenarios, run algorithms, and watch the search process and results animated in real time.
 
 ---
+
 ## Features
 
 - **Visualize A\* and Dijkstra's algorithms** step-by-step on a grid.
@@ -18,19 +30,21 @@ Pathfinding Algorithm Visualizer is a full-stack web application for interactive
 - **In-app tutorial** and algorithm explanations.
 
 ---
+
 ## Project Structure
+
 ```text
 Pathfinding-Algorithm-Visualizer
 ├── app.py
 ├── grid.py
 ├── node.py
-├── priority_queue.py 
+├── priority_queue.py
 ├── search_algorithms.py
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/ # UI components (Navbar, Grid, Header, etc.)
-│   │   ├── main.jsx 
+│   │   ├── main.jsx
 │   │   ├── App.jsx
 │   │   ├── ... # Stylesheets and helpers
 │   ├── index.html
@@ -40,20 +54,24 @@ Pathfinding-Algorithm-Visualizer
 ```
 
 ---
+
 ## Backend Structure
+
 - **`app.py`**: Flask app exposing `/astar` and `/dijkstra` endpoints for algorithm execution.
 - **`grid.py`**: Grid and node management, including wall and weight handling.
 - **`node.py`**: Node class representing each cell in the grid.
 - **`priority_queue.py`**: Custom priority queue for efficient node selection.
-- **`search_algorithms.py`**: Implementations of A* and Dijkstra's algorithms.
+- **`search_algorithms.py`**: Implementations of A\* and Dijkstra's algorithms.
 
 ## API Endpoints
 
 ### `/astar` (POST)
+
 Runs the A\* algorithm on the provided grid.
 
 **Sample Request JSON:**
-```json
+
+```JavaScript
 {
   "num_rows": 20,
   "num_cols": 20,
@@ -65,8 +83,10 @@ Runs the A\* algorithm on the provided grid.
   "allowDiagonal": true
 }
 ```
+
 **Sample Response JSON:**
-```json
+
+```JavaScript
 {
   "visited": [[x1, y1], [x2, y2], ...],
   "path": [[x1, y1], [x2, y2], ...],
@@ -77,10 +97,12 @@ Runs the A\* algorithm on the provided grid.
 ```
 
 ### `/dijkstra` (POST)
+
 Runs Dijkstra's algorithm on the provided grid.  
 **Request/Response:** Same structure as `/astar`.
 
 ---
+
 ## Frontend Structure
 
 - **`App.jsx`**: Main application logic, manages global state and API interactions.
@@ -90,37 +112,51 @@ Runs Dijkstra's algorithm on the provided grid.
 - **`Header.jsx`**: App title and help button.
 
 ---
+
 ## Styling
+
 - Uses CSS modules for each component (e.g., `Grid.css`, `Navbar.css`).
 - Responsive design for desktop and mobile.
 - Theming via CSS variables in `index.css` and `App.css`.
 
 ---
+
 ## Assets
+
 - All icons and tutorial GIFs are in `frontend/public/images/`.
 - Favicon and logos are in `frontend/public/`.
 
 ---
+
 ## Running Locally
+
 1. **Clone the repository:**
+
 ```sh
 git clone https://github.com/yourusername/Pathfinding-Algorithm-Visualizer.git
 cd Pathfinding-Algorithm-Visualizer
 ```
+
 2. **Install dependencies:**
+
 ```sh
 pip install requirements.txt
 ```
+
 3. **Run the backend server:**
+
 ```sh
 flask run --debug
 ```
+
 By default, the Flask app wil run at http://127.0.0.1:5000 when using the --debug option.
 
 4. **Install frontend dependencies and run:**
+
 ```sh
 cd frontend
 npm install
 npm run dev
 ```
+
 By default, Vite + React app runs at http://localhost:5173.
